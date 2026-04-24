@@ -278,9 +278,10 @@
   /* ── BUILT BY ── */
   .built-by {
     text-align: center;
-    font-size: 12px;
-    color: var(--muted);
+    font-size: 15px;
+    color: var(--text);
     padding-top: 4px;
+    font-weight: 500;
   }
   .built-by span { color: var(--cyan); }
 
@@ -606,7 +607,7 @@ async function renderTopHolders() {
    COUNTDOWN to Farcon Rome May 4
 ──────────────────────────────── */
 function updateCountdown() {
-  const target = new Date('2025-05-04T00:00:00Z');
+  const target = new Date('2026-05-04T00:00:00Z');
   const now = new Date();
   let diff = target - now;
   if (diff < 0) diff = 0;
