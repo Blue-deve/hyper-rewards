@@ -326,7 +326,7 @@
       <div class="alloc-label">Your Allocation</div>
       <div class="alloc-amount" id="tokenAmount">—</div>
       <div class="alloc-ticker">$HYPER tokens</div>
-      <div style="margin-top:12px;" id="usernameDisplay"></div>
+      <div style="margin-top:16px;margin-bottom:4px;" id="usernameDisplay"></div>
       <div class="fid-badge" id="fidBadge"></div>
       <p class="zero-msg hidden" id="zeroMsg">No allocation found for this FID. Only active Farcaster users qualified for FIP-19 retro rewards.</p>
     </div>
@@ -340,7 +340,7 @@
 
   <!-- COUNTDOWN -->
   <div class="card">
-    <div class="countdown-label">⏳ Farcon Rome Countdown — May 4, 2025</div>
+    <div class="countdown-label">⏳ Farcon Rome Countdown — May 4, 2026</div>
     <div class="countdown-grid">
       <div class="cd-box"><div class="cd-num" id="cdDays">00</div><div class="cd-unit">Days</div></div>
       <div class="cd-box"><div class="cd-num" id="cdHours">00</div><div class="cd-unit">Hours</div></div>
@@ -468,11 +468,11 @@ async function showResult(fid, tokens) {
     if (user) {
       badge.textContent = `FID: ${fid}`;
       document.getElementById('usernameDisplay').innerHTML = `
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-          <img src="${user.pfp_url}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(0,245,255,0.3);" onerror="this.style.display='none'">
+        <div style="display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,245,255,0.15);border-radius:16px;">
+          <img src="${user.pfp_url}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);flex-shrink:0;" onerror="this.style.display='none'">
           <div>
-            <div style="font-size:15px;font-weight:700;color:var(--cyan);">@${user.username}</div>
-            <div style="font-size:12px;color:var(--muted);">${user.display_name}</div>
+            <div style="font-size:20px;font-weight:700;color:var(--cyan);">@${user.username}</div>
+            <div style="font-size:14px;color:var(--muted);margin-top:2px;">${user.display_name}</div>
           </div>
         </div>`;
       document.getElementById('searchInput').value = `@${user.username}`;
