@@ -298,7 +298,16 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   .hidden { display: none !important; }
-::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0a0a1a; } ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #4a00e0, #e0006e, #ffb3d9); border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: #00ffff; }</style>
+::-webkit-scrollbar { width: 6px; } ::-webkit-scrollbar-track { background: #0a0a1a; } ::-webkit-scrollbar-thumb { background: linear-gradient(to bottom, #4a00e0, #e0006e, #ffb3d9); border-radius: 10px; } ::-webkit-scrollbar-thumb:hover { background: #00ffff; }
+  .carousel-wrap { overflow: hidden; width: 100%; padding: 10px 0; margin: 8px 0; background: rgba(0,255,255,0.03); border-radius: 12px; border: 1px solid rgba(0,255,255,0.08); }
+  .carousel-track { display: flex; gap: 12px; animation: scrollLeft 30s linear infinite; width: max-content; }
+  .carousel-track:hover { animation-play-state: paused; }
+  @keyframes scrollLeft { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+  .carousel-card { display: flex; align-items: center; gap: 8px; background: rgba(255,255,255,0.04); border: 1px solid rgba(0,255,255,0.1); border-radius: 10px; padding: 8px 14px; min-width: 180px; flex-shrink: 0; }
+  .carousel-card img { width: 28px; height: 28px; border-radius: 50%; object-fit: cover; }
+  .carousel-card-name { font-size: 12px; font-weight: 600; color: var(--cyan); }
+  .carousel-card-amount { font-size: 11px; color: var(--muted); }
+</style>
     <meta property="fc:frame" content="vNext">
     <meta property="fc:frame:image" content="https://hyper-rewards.vercel.app/og-image.png">
     <meta property="fc:frame:button:1" content="Check My $HYPER">
@@ -356,6 +365,7 @@
     </div>
   </div>
 
+  <div class="carousel-wrap"><div class="carousel-track" id="carouselTrack"><div style="color:var(--muted);font-size:12px;padding:4px 8px;">Loading...</div></div></div>
   <!-- TOP HOLDERS -->
   <div class="card">
     <div class="section-title">🏆 Top Holders</div>
@@ -428,6 +438,7 @@ async function loadRewards() {
     const res = await fetch('./rewards.json');
     rewardsData = await res.json();
     renderTopHolders();
+    renderCarousel();
   } catch(e) {
     document.getElementById('topHoldersList').innerHTML = '<p style="color:var(--muted);font-size:13px;">Could not load data.</p>';
   }
@@ -563,6 +574,31 @@ function openMore() {
 /* ────────────────────────────────
    TOP HOLDERS
 ──────────────────────────────── */
+
+async function renderCarousel() {
+  try {
+    const entries = Object.entries(rewardsData);
+    entries.sort((a, b) => b[1] - a[1]);
+    const top20 = entries.slice(0, 20);
+    const fids = top20.map(([fid]) => fid).join(',');
+    let userMap = {};
+    try {
+      const res = await fetch('https://api.neynar.com/v2/farcaster/user/bulk?fids=' + fids, { headers: { 'api_key': 'NEYNAR_API_DOCS' } });
+      const d = await res.json();
+      if (d?.users) d.users.forEach(u => { userMap[String(u.fid)] = u; });
+    } catch(e) {}
+    let cards = '';
+    top20.forEach(([fid, tokens]) => {
+      const u = userMap[String(fid)];
+      const name = u ? '@' + u.username : 'FID ' + fid;
+      const amt = formatNumber(tokens) + ' HYPER';
+      const img = u?.pfp_url ? '<img src="' + u.pfp_url + '" onerror="this.style.display=\'none\'">' : '';
+      cards += '<div class="carousel-card">' + img + '<div><div class="carousel-card-name">' + name + '</div><div class="carousel-card-amount">' + amt + '</div></div></div>';
+    });
+    document.getElementById('carouselTrack').innerHTML = cards + cards;
+  } catch(e) {}
+}
+
 async function renderTopHolders() {
   const entries = Object.entries(rewardsData);
   entries.sort((a, b) => b[1] - a[1]);
