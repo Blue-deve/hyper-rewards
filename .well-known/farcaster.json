@@ -1,4 +1,9 @@
 {
+  "accountAssociation": {
+    "header": "eyJmaWQiOjgxNjc5OSwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweDIyMkY5QThkQjlkNTY1N2I3NTc4OUJERjU5RjE5RjJDMDE5RjZCMTAifQ",
+    "payload": "eyJkb21haW4iOiJoeXBlci1yZXdhcmRzLnZlcmNlbC5hcHAifQ",
+    "signature": "E/vPNMYuGnHrQj7AYR67qdKNtcADNHznQ1XOmpk8YRAnme8MJCnGAU8/2YCL40QeK/h7n4+yLe+gWgbyI3e7GRw="
+  },
   "frame": {
     "version": "1",
     "name": "$HYPER Genesis Allocation",
