@@ -556,7 +556,7 @@ document.getElementById('searchInput').addEventListener('keydown', e => {
 ──────────────────────────────── */
 function shareResult() {
   const tokens = currentTokens;
-  const text = `🔥 I got ${formatNumber(tokens)} $HYPER in the Genesis allocation!\nCheck yours 👇 Built by @3hundred | Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
+  const text = `🔥 I got ${formatNumber(tokens)} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred | Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
   const url = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`;
   if (window.Farcaster?.actions) {
     window.Farcaster.actions.openUrl(url);
