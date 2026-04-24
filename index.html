@@ -325,6 +325,7 @@
       <div class="alloc-label">Your Allocation</div>
       <div class="alloc-amount" id="tokenAmount">—</div>
       <div class="alloc-ticker">$HYPER tokens</div>
+      <div style="margin-top:12px;" id="usernameDisplay"></div>
       <div class="fid-badge" id="fidBadge"></div>
       <p class="zero-msg hidden" id="zeroMsg">No allocation found for this FID. Only active Farcaster users qualified for FIP-19 retro rewards.</p>
     </div>
@@ -438,7 +439,7 @@ function formatNumber(n) {
   return Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
 }
 
-function showResult(fid, tokens) {
+async function showResult(fid, tokens) {
   currentFID = fid;
   currentTokens = tokens;
   const amountEl = document.getElementById('tokenAmount');
@@ -455,6 +456,27 @@ function showResult(fid, tokens) {
   } else {
     zeroMsg.classList.add('hidden');
   }
+
+  // Fetch username and show it
+  try {
+    const res = await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`, {
+      headers: { 'api_key': 'NEYNAR_API_DOCS' }
+    });
+    const data = await res.json();
+    const user = data?.users?.[0];
+    if (user) {
+      badge.textContent = `FID: ${fid}`;
+      document.getElementById('usernameDisplay').innerHTML = `
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+          <img src="${user.pfp_url}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:2px solid rgba(0,245,255,0.3);" onerror="this.style.display='none'">
+          <div>
+            <div style="font-size:15px;font-weight:700;color:var(--cyan);">@${user.username}</div>
+            <div style="font-size:12px;color:var(--muted);">${user.display_name}</div>
+          </div>
+        </div>`;
+      document.getElementById('searchInput').value = `@${user.username}`;
+    }
+  } catch(e) {}
 }
 
 /* ────────────────────────────────
@@ -462,7 +484,17 @@ function showResult(fid, tokens) {
 ──────────────────────────────── */
 async function handleSearch() {
   const val = document.getElementById('searchInput').value.trim();
-  if (!val) return;
+  // If empty, auto detect from Farcaster context
+  if (!val) {
+    const autoFID = getFID();
+    if (autoFID) {
+      const tokens = rewardsData[String(autoFID)] || 0;
+      showResult(autoFID, tokens);
+    } else {
+      alert('Please enter your FID or @username');
+    }
+    return;
+  }
 
   document.getElementById('loadingSpinner').classList.remove('hidden');
   document.getElementById('resultContent').style.opacity = '0.3';
@@ -523,7 +555,7 @@ function openMore() {
 /* ────────────────────────────────
    TOP HOLDERS
 ──────────────────────────────── */
-function renderTopHolders() {
+async function renderTopHolders() {
   const entries = Object.entries(rewardsData);
   entries.sort((a, b) => b[1] - a[1]);
   const top10 = entries.slice(0, 10);
@@ -531,18 +563,38 @@ function renderTopHolders() {
   const rankColors = ['gold', 'silver', 'bronze'];
   const rankEmojis = ['🥇','🥈','🥉'];
 
+  // Fetch usernames from Neynar
+  const fids = top10.map(([fid]) => fid).join(',');
+  let userMap = {};
+  try {
+    const res = await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fids}`, {
+      headers: { 'api_key': 'NEYNAR_API_DOCS' }
+    });
+    const data = await res.json();
+    if (data?.users) {
+      data.users.forEach(u => {
+        userMap[String(u.fid)] = { username: u.username, display: u.display_name, pfp: u.pfp_url };
+      });
+    }
+  } catch(e) {}
+
   let html = '';
   top10.forEach(([fid, tokens], i) => {
     const rankClass = i < 3 ? rankColors[i] : '';
     const rankLabel = i < 3 ? rankEmojis[i] : `#${i+1}`;
-    const initial = fid.toString().slice(-2);
+    const user = userMap[String(fid)];
+    const username = user ? `@${user.username}` : `FID ${fid}`;
+    const displayName = user ? user.display : 'Genesis Holder';
+    const avatar = user?.pfp
+      ? `<img src="${user.pfp}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.outerHTML='<div class=holder-avatar>${fid.toString().slice(-2)}</div>'">`
+      : `<div class="holder-avatar">${fid.toString().slice(-2)}</div>`;
     html += `
       <div class="holder-row">
         <div class="holder-rank ${rankClass}">${rankLabel}</div>
-        <div class="holder-avatar">${initial}</div>
+        ${avatar}
         <div class="holder-info">
-          <div class="holder-name">FID ${fid}</div>
-          <div class="holder-fid">Genesis Holder</div>
+          <div class="holder-name">${username}</div>
+          <div class="holder-fid">${displayName}</div>
         </div>
         <div class="holder-amount">${formatNumber(tokens)}</div>
       </div>`;
