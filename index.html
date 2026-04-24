@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>$HYPER Genesis Allocation</title>
+<script src="https://cdn.jsdelivr.net/npm/@farcaster/frame-sdk/dist/index.min.js"></script>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap');
 
@@ -629,6 +630,12 @@ updateCountdown();
    INIT
 ──────────────────────────────── */
 async function init() {
+  // Signal to Farcaster that app is ready
+  try {
+    if (window.Farcaster?.actions?.ready) {
+      await window.Farcaster.actions.ready();
+    }
+  } catch(e) {}
   await loadRewards();
   const fid = getFID();
   if (fid) {
