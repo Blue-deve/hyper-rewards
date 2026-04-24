@@ -1,81 +1,589 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>$HYPER Allocation Checker</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>$HYPER Genesis Allocation</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{min-height:100vh;background:#0a0a0f;font-family:Inter,sans-serif;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative}
-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
-.container{position:relative;z-index:10;width:100%;max-width:420px;padding:20px;text-align:center}
-.card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:24px;padding:36px 28px;backdrop-filter:blur(20px)}
-.logo{font-size:13px;color:rgba(255,255,255,0.4);letter-spacing:3px;text-transform:uppercase;margin-bottom:8px}
-h1{font-size:32px;font-weight:800;background:linear-gradient(135deg,#00f5ff,#bf5af2,#ff375f);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
-.subtitle{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:28px}
-.fid-display{background:rgba(0,245,255,0.08);border:1px solid rgba(0,245,255,0.2);border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:13px;color:rgba(255,255,255,0.5)}
-.fid-display span{color:#00f5ff;font-weight:600}
-.allocation-box{background:linear-gradient(135deg,rgba(0,245,255,0.1),rgba(191,90,242,0.1));border:1px solid rgba(0,245,255,0.25);border-radius:16px;padding:28px 20px;margin-bottom:20px}
-.allocation-label{font-size:12px;color:rgba(255,255,255,0.4);letter-spacing:2px;text-transform:uppercase;margin-bottom:8px}
-.allocation-amount{font-size:48px;font-weight:900;background:linear-gradient(135deg,#00f5ff,#bf5af2);-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:4px}
-.allocation-token{font-size:16px;color:rgba(255,255,255,0.5);font-weight:600}
-.stats-row{display:flex;gap:12px;margin-bottom:24px}
-.stat-box{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:14px 10px}
-.stat-label{font-size:10px;color:rgba(255,255,255,0.35);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:4px}
-.stat-value{font-size:15px;font-weight:700;color:#fff}
-.btn-row{display:flex;gap:10px}
-.btn-share{flex:1;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,#00f5ff,#bf5af2);color:#000;font-weight:800;font-size:14px;cursor:pointer}
-.btn-more{padding:14px 18px;border:1px solid rgba(255,255,255,0.15);border-radius:12px;background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.6);font-weight:600;font-size:14px;cursor:pointer}
-.loading{color:rgba(255,255,255,0.5);font-size:14px;padding:20px 0}
-.zero-box{background:rgba(255,55,95,0.08);border:1px solid rgba(255,55,95,0.2);border-radius:12px;padding:16px;margin-bottom:20px;font-size:13px;color:rgba(255,255,255,0.5)}
-.footer{margin-top:16px;font-size:11px;color:rgba(255,255,255,0.2)}
-.footer a{color:rgba(0,245,255,0.4);text-decoration:none}
+  @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Orbitron:wght@700;900&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cyan: #00f5ff;
+    --pink: #ff2d9b;
+    --purple: #a855f7;
+    --dark: #050510;
+    --card-bg: rgba(255,255,255,0.04);
+    --border: rgba(255,255,255,0.08);
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+  }
+
+  body {
+    background: var(--dark);
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 0 60px;
+  }
+
+  /* ── CANVAS WAVES ── */
+  #waveCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  .content {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 480px;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    text-align: center;
+    padding: 24px 0 8px;
+  }
+  .header h1 {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(22px, 6vw, 28px);
+    font-weight: 900;
+    background: linear-gradient(90deg, var(--cyan), var(--pink), var(--purple), var(--cyan));
+    background-size: 300% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shimmer 4s linear infinite;
+    letter-spacing: 1px;
+  }
+  .header p {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 6px;
+  }
+  @keyframes shimmer {
+    0% { background-position: 0% 50%; }
+    100% { background-position: 300% 50%; }
+  }
+
+  /* ── GLASS CARD ── */
+  .card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 22px 20px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* ── SEARCH BOX ── */
+  .search-wrap {
+    display: flex;
+    gap: 8px;
+  }
+  .search-wrap input {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .search-wrap input::placeholder { color: var(--muted); }
+  .search-wrap input:focus { border-color: var(--cyan); }
+  .search-wrap button {
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    border: none;
+    border-radius: 12px;
+    padding: 12px 18px;
+    color: #000;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    font-family: 'Space Grotesk', sans-serif;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .search-wrap button:hover { opacity: 0.85; }
+  .search-wrap button:active { transform: scale(0.97); }
+
+  /* ── ALLOCATION CARD ── */
+  .alloc-label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .alloc-amount {
+    font-family: 'Orbitron', monospace;
+    font-size: clamp(32px, 10vw, 48px);
+    font-weight: 900;
+    background: linear-gradient(135deg, var(--cyan), var(--pink));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.1;
+  }
+  .alloc-ticker {
+    font-size: 16px;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+  .fid-badge {
+    display: inline-block;
+    margin-top: 10px;
+    background: rgba(0,245,255,0.08);
+    border: 1px solid rgba(0,245,255,0.2);
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 12px;
+    color: var(--cyan);
+  }
+  .zero-msg {
+    font-size: 14px;
+    color: var(--muted);
+    line-height: 1.6;
+    margin-top: 6px;
+  }
+
+  /* ── ACTION BUTTONS ── */
+  .actions {
+    display: flex;
+    gap: 10px;
+  }
+  .btn {
+    flex: 1;
+    padding: 13px;
+    border-radius: 14px;
+    border: none;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--cyan), var(--pink));
+    color: #000;
+  }
+  .btn-primary:hover { opacity: 0.85; transform: translateY(-1px); }
+  .btn-secondary {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,0.1); transform: translateY(-1px); }
+
+  /* ── COUNTDOWN ── */
+  .countdown-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .countdown-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+  .cd-box {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 10px 6px;
+    text-align: center;
+  }
+  .cd-num {
+    font-family: 'Orbitron', monospace;
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .cd-unit {
+    font-size: 10px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 2px;
+  }
+
+  /* ── TOP HOLDERS ── */
+  .section-title {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .holder-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .holder-row:last-child { border-bottom: none; }
+  .holder-rank {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: var(--muted);
+    width: 24px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .holder-rank.gold { color: #fbbf24; }
+  .holder-rank.silver { color: #94a3b8; }
+  .holder-rank.bronze { color: #cd7f32; }
+  .holder-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--cyan), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: #000;
+    flex-shrink: 0;
+  }
+  .holder-info { flex: 1; min-width: 0; }
+  .holder-name { font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .holder-fid { font-size: 11px; color: var(--muted); }
+  .holder-amount {
+    font-family: 'Orbitron', monospace;
+    font-size: 13px;
+    color: var(--cyan);
+    white-space: nowrap;
+  }
+
+  /* ── BUILT BY ── */
+  .built-by {
+    text-align: center;
+    font-size: 12px;
+    color: var(--muted);
+    padding-top: 4px;
+  }
+  .built-by span { color: var(--cyan); }
+
+  /* ── SPINNER ── */
+  .spinner {
+    width: 32px; height: 32px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: var(--cyan);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 20px auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .hidden { display: none !important; }
 </style>
 </head>
 <body>
+
 <canvas id="waveCanvas"></canvas>
-<div class="container">
-  <div class="card">
-    <div class="logo">Farcaster x Hypersnap</div>
-    <h1>$HYPER Genesis</h1>
-    <p class="subtitle">Check your retro reward allocation</p>
-    <div class="fid-display">Your FID: <span id="fidDisplay">Detecting...</span></div>
-    <div id="mainContent" class="loading">Loading your allocation...</div>
-    <div class="footer">Built by <a href="https://warpcast.com/3hundred">@3hundred</a> · Data from <a href="https://github.com/farcasterorg">@cassie</a></div>
+
+<div class="content">
+
+  <!-- HEADER -->
+  <div class="header">
+    <h1>$HYPER GENESIS</h1>
+    <p>FIP-19 / Hypersnap · Retro Rewards Allocation</p>
   </div>
+
+  <!-- SEARCH -->
+  <div class="card">
+    <div class="search-wrap">
+      <input id="searchInput" type="text" placeholder="Enter FID or @username…" />
+      <button onclick="handleSearch()">Check</button>
+    </div>
+  </div>
+
+  <!-- RESULT CARD -->
+  <div class="card" id="resultCard">
+    <div id="loadingSpinner" class="spinner hidden"></div>
+    <div id="resultContent">
+      <div class="alloc-label">Your Allocation</div>
+      <div class="alloc-amount" id="tokenAmount">—</div>
+      <div class="alloc-ticker">$HYPER tokens</div>
+      <div class="fid-badge" id="fidBadge"></div>
+      <p class="zero-msg hidden" id="zeroMsg">No allocation found for this FID. Only active Farcaster users qualified for FIP-19 retro rewards.</p>
+    </div>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="actions">
+    <button class="btn btn-primary" onclick="shareResult()">🚀 Share</button>
+    <button class="btn btn-secondary" onclick="openMore()">⚡ More Info</button>
+  </div>
+
+  <!-- COUNTDOWN -->
+  <div class="card">
+    <div class="countdown-label">⏳ Farcon Rome Countdown — May 4, 2025</div>
+    <div class="countdown-grid">
+      <div class="cd-box"><div class="cd-num" id="cdDays">00</div><div class="cd-unit">Days</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdHours">00</div><div class="cd-unit">Hours</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdMins">00</div><div class="cd-unit">Mins</div></div>
+      <div class="cd-box"><div class="cd-num" id="cdSecs">00</div><div class="cd-unit">Secs</div></div>
+    </div>
+  </div>
+
+  <!-- TOP HOLDERS -->
+  <div class="card">
+    <div class="section-title">🏆 Top Holders</div>
+    <div id="topHoldersList">
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <div class="built-by">Built by <span>@3hundred</span> · Based on FIP-19/Hypersnap by <span>@cassie</span></div>
+
 </div>
+
 <script>
-const canvas=document.getElementById('waveCanvas');
-const ctx=canvas.getContext('2d');
-canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight});
-let t=0;
-function drawWaves(){
-ctx.clearRect(0,0,canvas.width,canvas.height);
-[{color:'rgba(0,245,255,0.12)',freq:0.003,amp:80,speed:0.012,offset:0},{color:'rgba(191,90,242,0.10)',freq:0.004,amp:60,speed:0.018,offset:2},{color:'rgba(255,55,95,0.08)',freq:0.002,amp:100,speed:0.008,offset:4}].forEach(w=>{
-ctx.beginPath();ctx.moveTo(0,canvas.height/2);
-for(let x=0;x<=canvas.width;x++){const y=canvas.height/2+Math.sin(x*w.freq+t*w.speed+w.offset)*w.amp+Math.sin(x*w.freq*2+t*w.speed*1.5)*(w.amp*0.4);ctx.lineTo(x,y)}
-ctx.lineTo(canvas.width,canvas.height);ctx.lineTo(0,canvas.height);ctx.closePath();ctx.fillStyle=w.color;ctx.fill()});
-t++;requestAnimationFrame(drawWaves)}
+/* ────────────────────────────────
+   ANIMATED WAVE CANVAS
+──────────────────────────────── */
+const canvas = document.getElementById('waveCanvas');
+const ctx = canvas.getContext('2d');
+
+function resize() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const waves = [
+  { color: '#00f5ff', amp: 80, freq: 0.012, speed: 0.018, phase: 0, y: 0.35, alpha: 0.18, width: 6 },
+  { color: '#ff2d9b', amp: 60, freq: 0.018, speed: 0.022, phase: 2, y: 0.55, alpha: 0.15, width: 5 },
+  { color: '#a855f7', amp: 90, freq: 0.009, speed: 0.014, phase: 4, y: 0.45, alpha: 0.12, width: 8 },
+  { color: '#00f5ff', amp: 50, freq: 0.025, speed: 0.03,  phase: 1, y: 0.65, alpha: 0.10, width: 4 },
+  { color: '#ff2d9b', amp: 70, freq: 0.015, speed: 0.019, phase: 5, y: 0.25, alpha: 0.09, width: 7 },
+  { color: '#a855f7', amp: 55, freq: 0.020, speed: 0.025, phase: 3, y: 0.75, alpha: 0.08, width: 5 },
+];
+
+function drawWaves() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  waves.forEach(w => {
+    w.phase += w.speed;
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height * w.y);
+    for (let x = 0; x <= canvas.width; x += 2) {
+      const y = canvas.height * w.y + Math.sin(x * w.freq + w.phase) * w.amp;
+      ctx.lineTo(x, y);
+    }
+    ctx.strokeStyle = w.color;
+    ctx.globalAlpha = w.alpha;
+    ctx.lineWidth = w.width;
+    ctx.shadowColor = w.color;
+    ctx.shadowBlur = 18;
+    ctx.stroke();
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+  });
+
+  requestAnimationFrame(drawWaves);
+}
 drawWaves();
-const REWARDS_URL='https://raw.githubusercontent.com/Blue-deve/hyper-rewards/main/rewards.json';
-let rewardsData={},userFID=null;
-async function loadRewards(){try{const r=await fetch(REWARDS_URL);rewardsData=await r.json()}catch(e){console.error(e)}}
-function getFID(){if(window.Farcaster?.context)return window.Farcaster.context.user?.fid||null;return new URLSearchParams(window.location.search).get('fid')}
-function formatNumber(n){if(n>=1000000)return(n/1000000).toFixed(2)+'M';if(n>=1000)return(n/1000).toFixed(1)+'K';return n.toFixed(2)}
-function getRank(t){if(t>=10000)return'🏆 Legend';if(t>=5000)return'💎 Diamond';if(t>=1000)return'🥇 Gold';if(t>=500)return'🥈 Silver';if(t>0)return'🥉 Bronze';return'—'}
-function shareResult(fid,tokens){
-const text=tokens>0?`🔥 I got ${formatNumber(tokens)} $HYPER in the Genesis allocation!\n\nCheck yours 👇\nBuilt by @3hundred | Based on FIP-19/Hypersnap by @cassie`:`Checked my $HYPER Genesis allocation — built by @3hundred\nBased on FIP-19/Hypersnap by @cassie\nCheck yours 👇`;
-if(window.Farcaster?.actions)window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
-else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank')}
-function showMore(){if(window.Farcaster?.actions)window.Farcaster.actions.openUrl('https://github.com/farcasterorg/hypersnap');else window.open('https://github.com/farcasterorg/hypersnap','_blank')}
-function renderApp(fid,tokens){
-const c=document.getElementById('mainContent');
-document.getElementById('fidDisplay').textContent=fid||'Unknown';
-if(!fid){c.innerHTML='<div class="zero-box">⚠️ Open this app inside Farcaster!</div>';return}
-if(!tokens||tokens===0){c.innerHTML=`<div class="zero-box">😔 FID <b>${fid}</b> has no $HYPER allocation.</div><div class="btn-row"><button class="btn-share" onclick="shareResult(${fid},0)">📤 Share</button><button class="btn-more" onclick="showMore()">••• More</button></div>`;return}
-c.innerHTML=`<div class="allocation-box"><div class="allocation-label">Your Allocation</div><div class="allocation-amount">${formatNumber(tokens)}</div><div class="allocation-token">$HYPER tokens</div></div><div class="stats-row"><div class="stat-box"><div class="stat-label">FID</div><div class="stat-value">#${fid}</div></div><div class="stat-box"><div class="stat-label">Rank</div><div class="stat-value">${getRank(tokens)}</div></div><div class="stat-box"><div class="stat-label">Round</div><div class="stat-value">Genesis</div></div></div><div class="btn-row"><button class="btn-share" onclick="shareResult(${fid},${tokens})">📤 Share</button><button class="btn-more" onclick="showMore()">••• More</button></div>`}
-async function init(){await loadRewards();userFID=getFID();const tokens=userFID?(rewardsData[String(userFID)]||0):0;renderApp(userFID,tokens)}
+
+/* ────────────────────────────────
+   DATA
+──────────────────────────────── */
+let rewardsData = {};
+let currentFID = null;
+let currentTokens = 0;
+
+async function loadRewards() {
+  try {
+    const res = await fetch('./rewards.json');
+    rewardsData = await res.json();
+    renderTopHolders();
+  } catch(e) {
+    document.getElementById('topHoldersList').innerHTML = '<p style="color:var(--muted);font-size:13px;">Could not load data.</p>';
+  }
+}
+
+function getFID() {
+  try {
+    const ctx = window.Farcaster?.context;
+    if (ctx?.user?.fid) return ctx.user.fid;
+  } catch(e) {}
+  const params = new URLSearchParams(window.location.search);
+  if (params.get('fid')) return parseInt(params.get('fid'));
+  return null;
+}
+
+function formatNumber(n) {
+  return Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 });
+}
+
+function showResult(fid, tokens) {
+  currentFID = fid;
+  currentTokens = tokens;
+  const amountEl = document.getElementById('tokenAmount');
+  const badge = document.getElementById('fidBadge');
+  const zeroMsg = document.getElementById('zeroMsg');
+
+  amountEl.textContent = formatNumber(tokens);
+  badge.textContent = `FID: ${fid}`;
+  badge.classList.remove('hidden');
+
+  if (tokens <= 0) {
+    amountEl.textContent = '0';
+    zeroMsg.classList.remove('hidden');
+  } else {
+    zeroMsg.classList.add('hidden');
+  }
+}
+
+/* ────────────────────────────────
+   SEARCH
+──────────────────────────────── */
+async function handleSearch() {
+  const val = document.getElementById('searchInput').value.trim();
+  if (!val) return;
+
+  document.getElementById('loadingSpinner').classList.remove('hidden');
+  document.getElementById('resultContent').style.opacity = '0.3';
+
+  let fid = null;
+
+  if (/^\d+$/.test(val)) {
+    fid = parseInt(val);
+  } else {
+    const username = val.replace('@', '');
+    try {
+      const res = await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(username)}&limit=1`, {
+        headers: { 'api_key': 'NEYNAR_API_DOCS' }
+      });
+      const data = await res.json();
+      fid = data?.result?.users?.[0]?.fid || null;
+    } catch(e) {}
+  }
+
+  document.getElementById('loadingSpinner').classList.add('hidden');
+  document.getElementById('resultContent').style.opacity = '1';
+
+  if (!fid) {
+    alert('User not found. Try entering a FID number directly.');
+    return;
+  }
+  const tokens = rewardsData[String(fid)] || 0;
+  showResult(fid, tokens);
+}
+
+document.getElementById('searchInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') handleSearch();
+});
+
+/* ────────────────────────────────
+   SHARE
+──────────────────────────────── */
+function shareResult() {
+  const tokens = currentTokens;
+  const text = `🔥 I got ${formatNumber(tokens)} $HYPER in the Genesis allocation!\nCheck yours 👇 Built by @3hundred | Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
+  const url = `https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`;
+  if (window.Farcaster?.actions) {
+    window.Farcaster.actions.openUrl(url);
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+function openMore() {
+  const url = 'https://github.com/farcasterorg/hypersnap';
+  if (window.Farcaster?.actions) {
+    window.Farcaster.actions.openUrl(url);
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+/* ────────────────────────────────
+   TOP HOLDERS
+──────────────────────────────── */
+function renderTopHolders() {
+  const entries = Object.entries(rewardsData);
+  entries.sort((a, b) => b[1] - a[1]);
+  const top10 = entries.slice(0, 10);
+
+  const rankColors = ['gold', 'silver', 'bronze'];
+  const rankEmojis = ['🥇','🥈','🥉'];
+
+  let html = '';
+  top10.forEach(([fid, tokens], i) => {
+    const rankClass = i < 3 ? rankColors[i] : '';
+    const rankLabel = i < 3 ? rankEmojis[i] : `#${i+1}`;
+    const initial = fid.toString().slice(-2);
+    html += `
+      <div class="holder-row">
+        <div class="holder-rank ${rankClass}">${rankLabel}</div>
+        <div class="holder-avatar">${initial}</div>
+        <div class="holder-info">
+          <div class="holder-name">FID ${fid}</div>
+          <div class="holder-fid">Genesis Holder</div>
+        </div>
+        <div class="holder-amount">${formatNumber(tokens)}</div>
+      </div>`;
+  });
+  document.getElementById('topHoldersList').innerHTML = html;
+}
+
+/* ────────────────────────────────
+   COUNTDOWN to Farcon Rome May 4
+──────────────────────────────── */
+function updateCountdown() {
+  const target = new Date('2025-05-04T00:00:00Z');
+  const now = new Date();
+  let diff = target - now;
+  if (diff < 0) diff = 0;
+
+  const days  = Math.floor(diff / 86400000);
+  const hours = Math.floor((diff % 86400000) / 3600000);
+  const mins  = Math.floor((diff % 3600000) / 60000);
+  const secs  = Math.floor((diff % 60000) / 1000);
+
+  document.getElementById('cdDays').textContent  = String(days).padStart(2,'0');
+  document.getElementById('cdHours').textContent = String(hours).padStart(2,'0');
+  document.getElementById('cdMins').textContent  = String(mins).padStart(2,'0');
+  document.getElementById('cdSecs').textContent  = String(secs).padStart(2,'0');
+}
+setInterval(updateCountdown, 1000);
+updateCountdown();
+
+/* ────────────────────────────────
+   INIT
+──────────────────────────────── */
+async function init() {
+  await loadRewards();
+  const fid = getFID();
+  if (fid) {
+    const tokens = rewardsData[String(fid)] || 0;
+    showResult(fid, tokens);
+    document.getElementById('searchInput').value = String(fid);
+  }
+}
 init();
 </script>
 </body>
