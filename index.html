@@ -599,7 +599,7 @@ async function renderCarousel() {
       const u = userMap[String(fid)];
       const name = u ? '@' + u.username : 'FID ' + fid;
       const amt = formatNumber(tokens) + ' HYPER';
-      const img = u?.pfp_url ? '<img src="https://imageproxy.farcaster.xyz/imgproxy?url=' + encodeURIComponent(u.pfp_url) + '"' onerror="this.style.display=\'none\'">' : '';
+      const img = u?.pfp_url ? '<img src="' + encodeURIComponent(u.pfp_url) + '" style="width:28px;height:28px;border-radius:50%;object-fit:cover;" onerror="this.style.display=\'none\'">' : '';
       cards += '<div class="carousel-card">' + img + '<div><div class="carousel-card-name">' + name + '</div><div class="carousel-card-amount">' + amt + '</div></div></div>';
     });
     document.getElementById('carouselTrack').innerHTML = cards + cards;
