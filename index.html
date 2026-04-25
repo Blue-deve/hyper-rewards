@@ -482,7 +482,7 @@ async function showResult(fid, tokens) {
   // Fetch username and show it
   try {
     const res = await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`, {
-      headers: { 'api_key': 'EB30C5B0-39CC-4375-AD10-2781B25E2708' }, cache: 'force-cache'
+      headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }, cache: 'force-cache'
     });
     const data = await res.json();
     const user = data?.users?.[0];
@@ -529,7 +529,7 @@ async function handleSearch() {
     const username = val.replace('@', '');
     try {
       const res = await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(username)}&limit=1`, {
-        headers: { 'api_key': 'EB30C5B0-39CC-4375-AD10-2781B25E2708' }, cache: 'force-cache'
+        headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }, cache: 'force-cache'
       });
       const data = await res.json();
       fid = data?.result?.users?.[0]?.fid || null;
@@ -586,7 +586,7 @@ async function renderCarousel() {
     const fids = top20.map(([fid]) => fid).join(',');
     let userMap = {};
     try {
-      const res = await fetch('https://api.neynar.com/v2/farcaster/user/bulk?fids=' + fids, { headers: { 'api_key': 'EB30C5B0-39CC-4375-AD10-2781B25E2708' }, cache: 'force-cache' });
+      const res = await fetch('https://api.neynar.com/v2/farcaster/user/bulk?fids=' + fids, { headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }, cache: 'force-cache' });
       const d = await res.json();
       if (d?.users) d.users.forEach(u => { userMap[String(u.fid)] = u; });
     } catch(e) {}
@@ -615,7 +615,7 @@ async function renderTopHolders() {
   let userMap = {};
   try {
     const res = await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fids}`, {
-      headers: { 'api_key': 'EB30C5B0-39CC-4375-AD10-2781B25E2708' }, cache: 'force-cache'
+      headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }, cache: 'force-cache'
     });
     const data = await res.json();
     if (data?.users) {
