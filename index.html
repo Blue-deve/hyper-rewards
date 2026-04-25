@@ -432,7 +432,21 @@ drawWaves();
 /* ────────────────────────────────
    DATA
 ──────────────────────────────── */
-let rewardsData = {};
+let rewardsData = {}
+
+async function loadChunkForFID(fid) {
+  try {
+    const bucket = Math.floor(parseInt(fid) / 100000);
+    const url = 'https://raw.githubusercontent.com/Blue-deve/hyper-rewards/main/data/r' + bucket + '.json';
+    const r = await fetch(url);
+    const d = await r.json();
+    Object.assign(rewardsData, d);
+  } catch(e) { console.error('chunk load failed', e); }
+}
+
+async function loadRewards() {
+  // no-op - loaded per chunk
+};
 let currentFID = null;
 let currentTokens = 0;
 
