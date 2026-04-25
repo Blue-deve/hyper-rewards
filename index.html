@@ -528,7 +528,7 @@ async function handleSearch() {
   } else {
     const username = val.replace('@', '');
     try {
-      const searchName = username.replace('@',''); const res = await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(searchName)}&limit=5`, {
+      const searchName = username.replace('@',''); const res = await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(searchName)}&limit=5`, { headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' },
         headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }
       });
       const data = await res.json();
@@ -681,7 +681,7 @@ async function init() {
       await window.Farcaster.actions.ready();
     }
   } catch(e) {}
-  await loadRewards();
+  loadRewards(); // load in background, don't await
   const fid = getFID();
   if (fid) {
     const tokens = rewardsData[String(fid)] || 0;
