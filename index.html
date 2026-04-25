@@ -530,7 +530,6 @@ async function handleSearch() {
 
   if (/^\d+$/.test(val)) {
     fid = parseInt(val);
-    await loadChunkForFID(fid);
   } else {
     const username = val.replace('@', '');
     try {
