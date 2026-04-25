@@ -530,6 +530,7 @@ async function handleSearch() {
 
   if (/^\d+$/.test(val)) {
     fid = parseInt(val);
+    await loadChunkForFID(fid);
   } else {
     const username = val.replace('@', '');
     try {
@@ -587,6 +588,10 @@ async function renderCarousel() {
     await loadChunkForFID(300000);
     await loadChunkForFID(400000);
   }
+  if (Object.keys(rewardsData).length < 100) {
+    await loadChunkForFID(300000);
+    await loadChunkForFID(400000);
+  }
   try {
     const entries = Object.entries(rewardsData);
     entries.sort((a, b) => b[1] - a[1]);
@@ -611,6 +616,13 @@ async function renderCarousel() {
 }
 
 async function renderTopHolders() {
+  // Load top chunks to find top holders
+  if (Object.keys(rewardsData).length < 100) {
+    await loadChunkForFID(300000);
+    await loadChunkForFID(400000);
+    await loadChunkForFID(500000);
+    await loadChunkForFID(200000);
+  }
   // Load top chunks to find top holders
   if (Object.keys(rewardsData).length < 100) {
     await loadChunkForFID(300000);
