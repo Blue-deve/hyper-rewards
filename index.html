@@ -451,14 +451,7 @@ let currentFID = null;
 let currentTokens = 0;
 
 async function loadRewards() {
-  try {
-    // rewards loaded per chunk on demand
-    // chunk loaded on demand
-    renderTopHolders();
-    renderCarousel();
-  } catch(e) {
-    document.getElementById('topHoldersList').innerHTML = '<p style="color:var(--muted);font-size:13px;">Could not load data.</p>';
-  }
+  // no-op, chunks loaded on demand
 }
 
 function getFID() {
@@ -597,12 +590,7 @@ function openMore() {
 
 async function renderCarousel() {
   if (Object.keys(rewardsData).length < 100) {
-    await loadChunkForFID(300000);
-    await loadChunkForFID(400000);
-  }
-  if (Object.keys(rewardsData).length < 100) {
-    await loadChunkForFID(300000);
-    await loadChunkForFID(400000);
+    await Promise.all([0,1,2,3,4,5].map(b => loadChunkForFID(b * 100000)));
   }
   try {
     const entries = Object.entries(rewardsData);
