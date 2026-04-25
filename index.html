@@ -533,9 +533,9 @@ async function handleSearch() {
   } else {
     const username = val.replace('@', '');
     try {
-      const res = await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(val.replace('@',''))}&limit=5`, { headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' } });
+      const res = await fetch(`https://api.neynar.com/v2/farcaster/user/by_username?username=${encodeURIComponent(val.replace('@',''))}`, { headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' } });
       const data = await res.json();
-      fid = data?.users?.[0]?.fid || null;
+      fid = data?.user?.fid || null;
     } catch(e) {}
   }
 
