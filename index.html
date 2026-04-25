@@ -650,7 +650,7 @@ async function renderTopHolders() {
     const user = userMap[String(fid)];
     const username = user ? `@${user.username}` : `FID ${fid}`;
     const displayName = user ? user.display : 'Genesis Holder';
-      const avatar = user?.username ? `<img src="https://unavatar.io/farcaster/${user.username}" referrerpolicy="no-referrer" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,245,255,0.3);" onerror="this.outerHTML='<div class=holder-avatar>${String(fid).slice(-2)}</div>'">` : `<div class="holder-avatar">${String(fid).slice(-2)}</div>`;
+            const avatar = user?.username ? `<img src="https://unavatar.io/farcaster/${user.username}" referrerpolicy="no-referrer" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,245,255,0.3);" onerror="this.outerHTML='<div class=holder-avatar>${String(fid).slice(-2)}</div>'">` : `<div class="holder-avatar">${String(fid).slice(-2)}</div>`;
     html += `
       <div class="holder-row">
         <div class="holder-rank ${rankClass}">${rankLabel}</div>
