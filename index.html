@@ -672,7 +672,7 @@ async function renderTopHolders() {
     const username = user ? `@${user.username}` : `FID ${fid}`;
     const displayName = user ? user.display : 'Genesis Holder';
     const avatar = user?.pfp
-      ? `<img src="${user.pfp}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.outerHTML='<div class=holder-avatar>${fid.toString().slice(-2)}</div>'">`
+      ? `<img src="https://res.cloudinary.com/merkle-manufactory/image/fetch/c_fill,f_jpg,w_64/${encodeURIComponent(user.pfp)}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.outerHTML='<div class=holder-avatar>${fid.toString().slice(-2)}</div>'">`
       : `<div class="holder-avatar">${fid.toString().slice(-2)}</div>`;
     html += `
       <div class="holder-row">
