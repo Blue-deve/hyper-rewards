@@ -663,7 +663,7 @@ async function renderTopHolders() {
     const username = user ? `@${user.username}` : `FID ${fid}`;
     const displayName = user ? user.display : 'Genesis Holder';
     const avatar = user?.pfp
-      ? `<img src="${user.pfp}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.outerHTML='<div class=holder-avatar>${fid.toString().slice(-2)}</div>'">`
+      ? `<img src="${user.pfp}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.src='https://unavatar.io/farcaster/'+encodeURIComponent((user&&user.username)||'x');this.onerror=null;" data-bak="${fid.toString().slice(-2)}</div>'">`
       : `<div class="holder-avatar">${fid.toString().slice(-2)}</div>`;
     html += `
       <div class="holder-row">
