@@ -508,7 +508,7 @@ async function showResult(fid, tokens) {
       badge.textContent = `FID: ${fid}`;
       document.getElementById('usernameDisplay').innerHTML = `
         <div style="display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,245,255,0.15);border-radius:16px;">
-          <img src="https://imageproxy.farcaster.xyz/imgproxy?url=${encodeURIComponent(user.pfp_url)}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);flex-shrink:0;" onerror="this.style.display='none'">
+          <img src="${user.pfp_url}" referrerpolicy="no-referrer" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);flex-shrink:0;" onerror="this.style.display='none'">
           <div>
             <div style="font-size:20px;font-weight:700;color:var(--cyan);">@${user.username}</div>
             <div style="font-size:14px;color:var(--muted);margin-top:2px;">${user.display_name}</div>
