@@ -583,6 +583,10 @@ function openMore() {
 ──────────────────────────────── */
 
 async function renderCarousel() {
+  if (Object.keys(rewardsData).length < 100) {
+    await loadChunkForFID(300000);
+    await loadChunkForFID(400000);
+  }
   try {
     const entries = Object.entries(rewardsData);
     entries.sort((a, b) => b[1] - a[1]);
@@ -607,6 +611,13 @@ async function renderCarousel() {
 }
 
 async function renderTopHolders() {
+  // Load top chunks to find top holders
+  if (Object.keys(rewardsData).length < 100) {
+    await loadChunkForFID(300000);
+    await loadChunkForFID(400000);
+    await loadChunkForFID(500000);
+    await loadChunkForFID(200000);
+  }
   const entries = Object.entries(rewardsData);
   entries.sort((a, b) => b[1] - a[1]);
   const top10 = entries.slice(0, 10);
