@@ -464,7 +464,6 @@ function formatNumber(n) {
 async function showResult(fid, tokens) {
   // Load chunk for this FID if not already loaded
   if (rewardsData[String(fid)] === undefined) {
-    await loadChunkForFID(fid);
   }
   tokens = rewardsData[String(fid)] || 0;
   currentFID = fid;
