@@ -433,7 +433,7 @@ let rewardsData = {}
 async function loadChunkForFID(fid) {
   try {
     const bucket = Math.floor(parseInt(fid) / 100000);
-    const url = 'https://raw.githubusercontent.com/Blue-deve/hyper-rewards/main/data/r' + bucket + '.json';
+    const url = '/data/r' + bucket + '.json';
     const r = await fetch(url);
     const d = await r.json();
     Object.assign(rewardsData, d);
