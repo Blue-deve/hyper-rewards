@@ -620,7 +620,7 @@ async function renderCarousel() {
       const u = userMap[String(fid)];
       const name = u ? '@' + u.username : 'FID ' + fid;
       const amt = formatNumber(tokens) + ' HYPER';
-      const img = u?.pfp_url ? '<img src="' + u.pfp_url + '" style="width:28px;height:28px;border-radius:50%;object-fit:cover;" onerror="this.style.display=none">' : '';
+          <img src="${user.pfp_url}" referrerpolicy="no-referrer" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);flex-shrink:0;" onerror="this.style.display='none'">
       cards += '<div class="carousel-card">' + img + '<div><div class="carousel-card-name">' + name + '</div><div class="carousel-card-amount">' + amt + '</div></div></div>';
     });
     document.getElementById('carouselTrack').innerHTML = cards + cards;
@@ -662,7 +662,7 @@ async function renderTopHolders() {
     const user = userMap[String(fid)];
     const username = user ? `@${user.username}` : `FID ${fid}`;
     const displayName = user ? user.display : 'Genesis Holder';
-    const avatar = user?.pfp
+      const avatar = user?.username ? `<img src="https://unavatar.io/farcaster/${user.username}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,245,255,0.3);" onerror="this.outerHTML='<div class=holder-avatar>${String(fid).slice(-2)}</div>'">` : `<div class="holder-avatar">${String(fid).slice(-2)}</div>`;
       ? `<img src="https://unavatar.io/farcaster/${user.username}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;flex-shrink:0;border:1px solid rgba(0,245,255,0.3);" onerror="this.outerHTML='<div class=holder-avatar>${fid.toString().slice(-2)}</div>'">`
       : `<div class="holder-avatar">${fid.toString().slice(-2)}</div>`;
     html += `
