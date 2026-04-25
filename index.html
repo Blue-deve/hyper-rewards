@@ -64,7 +64,6 @@
     font-weight: 900;
     background: linear-gradient(90deg, var(--cyan), var(--pink), var(--purple), var(--cyan));
     background-size: 300% 100%;
-    -webkit-background-clip: text;
     color: var(--cyan);
     animation: shimmer 4s linear infinite;
     letter-spacing: 1px;
@@ -136,7 +135,6 @@
     font-size: clamp(32px, 10vw, 48px);
     font-weight: 900;
     background: linear-gradient(135deg, var(--cyan), var(--pink));
-    -webkit-background-clip: text;
     color: var(--cyan);
     line-height: 1.1;
   }
@@ -220,7 +218,6 @@
     font-size: 22px;
     font-weight: 700;
     background: linear-gradient(135deg, var(--cyan), var(--purple));
-    -webkit-background-clip: text;
     color: var(--cyan);
   }
   .cd-unit {
@@ -444,9 +441,6 @@ async function loadChunkForFID(fid) {
   } catch(e) { console.error('chunk load failed', e); }
 }
 
-async function loadRewards() {
-  // no-op - loaded per chunk
-};
 let currentFID = null;
 let currentTokens = 0;
 
@@ -697,14 +691,13 @@ async function init() {
       await window.Farcaster.actions.ready();
     }
   } catch(e) {}
-  renderCarousel();
-  renderTopHolders();
   const fid = getFID();
   if (fid) {
-    const tokens = rewardsData[String(fid)] || 0;
-    showResult(fid, tokens);
     document.getElementById('searchInput').value = String(fid);
+    await showResult(fid, 0);
   }
+  renderCarousel();
+  renderTopHolders();
 }
 init();
 </script>
