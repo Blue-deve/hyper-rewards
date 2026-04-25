@@ -482,7 +482,7 @@ async function showResult(fid, tokens) {
   // Fetch username and show it
   try {
     const res = await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`, {
-      headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }, cache: 'force-cache'
+      headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }
     });
     const data = await res.json();
     const user = data?.users?.[0];
@@ -490,7 +490,7 @@ async function showResult(fid, tokens) {
       badge.textContent = `FID: ${fid}`;
       document.getElementById('usernameDisplay').innerHTML = `
         <div style="display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,245,255,0.15);border-radius:16px;">
-          <img src="https://wsrv.nl/?url=${encodeURIComponent(user.pfp_url)}&w=120&h=120&fit=cover" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);flex-shrink:0;" onerror="this.style.display='none'">
+          <img src="${user.pfp_url}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);flex-shrink:0;" onerror="this.style.display='none'">
           <div>
             <div style="font-size:20px;font-weight:700;color:var(--cyan);">@${user.username}</div>
             <div style="font-size:14px;color:var(--muted);margin-top:2px;">${user.display_name}</div>
@@ -529,7 +529,7 @@ async function handleSearch() {
     const username = val.replace('@', '');
     try {
       const res = await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(username)}&limit=1`, {
-        headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }, cache: 'force-cache'
+        headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }
       });
       const data = await res.json();
       fid = data?.result?.users?.[0]?.fid || null;
@@ -586,7 +586,7 @@ async function renderCarousel() {
     const fids = top20.map(([fid]) => fid).join(',');
     let userMap = {};
     try {
-      const res = await fetch('https://api.neynar.com/v2/farcaster/user/bulk?fids=' + fids, { headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }, cache: 'force-cache' });
+      const res = await fetch('https://api.neynar.com/v2/farcaster/user/bulk?fids=' + fids, { headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' } });
       const d = await res.json();
       if (d?.users) d.users.forEach(u => { userMap[String(u.fid)] = u; });
     } catch(e) {}
@@ -595,7 +595,7 @@ async function renderCarousel() {
       const u = userMap[String(fid)];
       const name = u ? '@' + u.username : 'FID ' + fid;
       const amt = formatNumber(tokens) + ' HYPER';
-      const img = u?.pfp_url ? '<img src="' + 'https://wsrv.nl/?url=' + encodeURIComponent(u.pfp_url) + '&w=120&h=120&fit=cover' + '" onerror="this.style.display=\'none\'">' : '';
+      const img = u?.pfp_url ? '<img src="' + u.pfp_url + '" onerror="this.style.display=\'none\'">' : '';
       cards += '<div class="carousel-card">' + img + '<div><div class="carousel-card-name">' + name + '</div><div class="carousel-card-amount">' + amt + '</div></div></div>';
     });
     document.getElementById('carouselTrack').innerHTML = cards + cards;
@@ -615,7 +615,7 @@ async function renderTopHolders() {
   let userMap = {};
   try {
     const res = await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fids}`, {
-      headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }, cache: 'force-cache'
+      headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }
     });
     const data = await res.json();
     if (data?.users) {
@@ -633,7 +633,7 @@ async function renderTopHolders() {
     const username = user ? `@${user.username}` : `FID ${fid}`;
     const displayName = user ? user.display : 'Genesis Holder';
     const avatar = user?.pfp
-      ? `<img src="https://wsrv.nl/?url=${encodeURIComponent(user.pfp)}&w=64&h=64&fit=cover" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.outerHTML='<div class=holder-avatar>${fid.toString().slice(-2)}</div>'">`
+      ? `<img src="${user.pfp}" style="width:32px;height:32px;border-radius:50%;object-fit:cover;flex-shrink:0;" onerror="this.outerHTML='<div class=holder-avatar>${fid.toString().slice(-2)}</div>'">`
       : `<div class="holder-avatar">${fid.toString().slice(-2)}</div>`;
     html += `
       <div class="holder-row">
