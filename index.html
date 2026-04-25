@@ -490,7 +490,7 @@ async function showResult(fid, tokens) {
       badge.textContent = `FID: ${fid}`;
       document.getElementById('usernameDisplay').innerHTML = `
         <div style="display:flex;align-items:center;gap:14px;padding:14px;background:rgba(255,255,255,0.05);border:1px solid rgba(0,245,255,0.15);border-radius:16px;">
-          <img src="${user.pfp_url}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);flex-shrink:0;" onerror="this.style.display='none'">
+          <img src="https://imageproxy.farcaster.xyz/imgproxy?url=${encodeURIComponent(user.pfp_url)}" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:2px solid var(--cyan);flex-shrink:0;" onerror="this.style.display='none'">
           <div>
             <div style="font-size:20px;font-weight:700;color:var(--cyan);">@${user.username}</div>
             <div style="font-size:14px;color:var(--muted);margin-top:2px;">${user.display_name}</div>
@@ -528,11 +528,11 @@ async function handleSearch() {
   } else {
     const username = val.replace('@', '');
     try {
-      const res = await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(username)}&limit=1`, {
+      const searchName = username.replace('@',''); const res = await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(searchName)}&limit=5`, {
         headers: { 'api_key': '4D13DD4C-550D-45A6-B887-F83ABA4FF755' }
       });
       const data = await res.json();
-      fid = data?.result?.users?.[0]?.fid || null;
+      fid = data?.users?.[0]?.fid || null;
     } catch(e) {}
   }
 
@@ -595,7 +595,7 @@ async function renderCarousel() {
       const u = userMap[String(fid)];
       const name = u ? '@' + u.username : 'FID ' + fid;
       const amt = formatNumber(tokens) + ' HYPER';
-      const img = u?.pfp_url ? '<img src="' + u.pfp_url + '" onerror="this.style.display=\'none\'">' : '';
+      const img = u?.pfp_url ? '<img src="https://imageproxy.farcaster.xyz/imgproxy?url=' + encodeURIComponent(u.pfp_url) + '"' onerror="this.style.display=\'none\'">' : '';
       cards += '<div class="carousel-card">' + img + '<div><div class="carousel-card-name">' + name + '</div><div class="carousel-card-amount">' + amt + '</div></div></div>';
     });
     document.getElementById('carouselTrack').innerHTML = cards + cards;
