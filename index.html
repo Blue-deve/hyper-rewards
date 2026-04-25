@@ -438,7 +438,7 @@ let currentTokens = 0;
 
 async function loadRewards() {
   try {
-    const res = await fetch('./rewards.json');
+    // rewards loaded per chunk on demand
     rewardsData = await res.json();
     renderTopHolders();
     renderCarousel();
