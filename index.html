@@ -400,5 +400,12 @@ loadHolders();
     }
   });
 </script>
+<script type="module">
+  import { sdk } from 'https://esm.sh/@farcaster/frame-sdk';
+  window.farcasterSdk = sdk;
+  window.addEventListener('load', async () => {
+    try { await sdk.actions.ready(); } catch(e) {}
+  });
+</script>
 </body>
 </html>
