@@ -176,10 +176,7 @@ html{scrollbar-width:thin;scrollbar-color:#f72585 #04061a}
       <div class="cd-box"><div class="cd-num" id="cdMins">00</div><div class="cd-unit">Mins</div></div>
       <div class="cd-box"><div class="cd-num" id="cdSecs">00</div><div class="cd-unit">Secs</div></div>
     </div>
-    <div class="cd-btns">
-      <button class="cd-btn cd-btn-share" type="button" onclick="shareCountdown()">🚀 Share Countdown</button>
-      <button class="cd-btn cd-btn-info" type="button" onclick="moreInfo()">⚡ More Info</button>
-    </div>
+
   </div>
 
   <!-- SHARE + MORE INFO STANDALONE BOX -->
@@ -312,8 +309,9 @@ async function handleSearch(){
     if(r.ok){ const d = await r.json(); tokens = d[String(fid)] || 0; }
   } catch(e) {}
   const pw=document.getElementById('pfpWrap');
-  if(user?.pfp_url){
-    pw.innerHTML=`<img class="pfp" src="${user.pfp_url}" referrerpolicy="no-referrer" onerror="this.outerHTML='<div class=pfp-ph>${String(fid).slice(-2)}</div>'"><div class="pfp-ring"></div>`;
+  const pfpSrc = user?.pfp_url || (user?.username ? `https://unavatar.io/farcaster/${user.username}` : '');
+  if(pfpSrc){
+    pw.innerHTML=`<img class="pfp" src="${pfpSrc}" referrerpolicy="no-referrer" onerror="this.outerHTML='<div class=\'pfp-ph\'>${String(fid).slice(-2)}</div>'"><div class="pfp-ring"></div>`;
   }else{
     pw.innerHTML=`<div class="pfp-ph">${String(fid).slice(-2)}</div><div class="pfp-ring"></div>`;
   }
