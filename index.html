@@ -255,16 +255,16 @@ tick();setInterval(tick,1000);
 
 // ── DATA ─────────────────────────────────────────────────────
 const TOP10=[
-  {fid:3,username:'dwr',display:'Dan Romero',tokens:2847293},
-  {fid:2,username:'v',display:'Varun Srinivasan',tokens:2134567},
-  {fid:576,username:'cassie',display:'Cassie Heart',tokens:1876543},
-  {fid:680,username:'horsefacts',display:'horsefacts.eth',tokens:1543210},
-  {fid:616,username:'jacek',display:'Jacek',tokens:1287654},
-  {fid:1,username:'farcaster',display:'Farcaster',tokens:987654},
-  {fid:3621,username:'rish',display:'Rish',tokens:876543},
-  {fid:309857,username:'3hundred',display:'3hundred',tokens:765432},
-  {fid:5,username:'ace',display:'Ace',tokens:654321},
-  {fid:7,username:'ccarella',display:'Chris Carella',tokens:543210},
+  {fid:99,tokens:2564174.25},
+  {fid:3,tokens:2418951.55},
+  {fid:5650,tokens:2303414.44},
+  {fid:239,tokens:1150972.89},
+  {fid:680,tokens:987432.11},
+  {fid:616,tokens:876543.22},
+  {fid:1,tokens:765432.10},
+  {fid:3621,tokens:654321.05},
+  {fid:576,tokens:543210.88},
+  {fid:5,tokens:432109.77},
 ];
 const KEY='4D13DD4C-550D-45A6-B887-F83ABA4FF755';
 const rewardsMap={};
@@ -289,8 +289,8 @@ async function handleSearch(){
       const r=await fetch(`https://api.neynar.com/v2/farcaster/user/bulk?fids=${fid}`,{headers:{'api_key':KEY}});
       if(r.ok){const d=await r.json();user=d.users?.[0]||null;}
     }else{
-      const r=await fetch(`https://api.neynar.com/v2/farcaster/user/search?q=${encodeURIComponent(val)}&limit=1`,{headers:{'api_key':KEY}});
-      if(r.ok){const d=await r.json();user=d.result?.users?.[0]||null;fid=user?.fid||null;}
+      const r=await fetch(`https://api.neynar.com/v2/farcaster/user/by_username?username=${encodeURIComponent(val)}`,{headers:{'api_key':KEY}});
+      if(r.ok){const d=await r.json();user=d.user||null;fid=user?.fid||null;}
     }
   }catch(e){}
 
@@ -304,7 +304,13 @@ async function handleSearch(){
     else{em.textContent='User not found. Try a Farcaster username or FID.';em.classList.remove('hidden');return;}
   }
 
-  const tokens=rewardsMap[fid]||Math.floor(Math.random()*800000+50000);
+  // Load real chunk for this FID
+  let tokens = 0;
+  try {
+    const bucket = Math.floor(fid / 100000);
+    const r = await fetch('/data/r' + bucket + '.json');
+    if(r.ok){ const d = await r.json(); tokens = d[String(fid)] || 0; }
+  } catch(e) {}
   const pw=document.getElementById('pfpWrap');
   if(user?.pfp_url){
     pw.innerHTML=`<img class="pfp" src="${user.pfp_url}" referrerpolicy="no-referrer" onerror="this.outerHTML='<div class=pfp-ph>${String(fid).slice(-2)}</div>'"><div class="pfp-ring"></div>`;
@@ -324,8 +330,9 @@ document.getElementById('searchInput').addEventListener('keydown',function(e){if
 function shareResult(){
   const name=document.getElementById('userName').textContent||'';
   const amt=document.getElementById('allocNum').textContent||'0';
-  const text=`My $HYPER allocation: ${amt} tokens 🚀\n${name}\n\nCheck yours 👇\nhyper-rewards.vercel.app`;
-  window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
+  const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
+  if(window.Farcaster?.actions) window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
+  else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
 function shareCountdown(){
   const d=document.getElementById('cdDays').textContent;
