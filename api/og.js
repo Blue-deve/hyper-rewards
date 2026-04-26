@@ -38,7 +38,7 @@ export default async function handler(req) {
 <meta property="og:description" content="Check your $HYPER Genesis allocation. Built by @3hundred" />
 <meta property="og:image" content="https://hyper-rewards.vercel.app/og-image-v2.png" />
 <meta property="og:url" content="https://hyper-rewards.vercel.app/api/og?fid=${fid}" />
-<meta name="fc:miniapp" content='{"version":"next","imageUrl":"https://hyper-rewards.vercel.app/og-image-v2.png","button":{"title":"Check My HYPER","action":{"type":"launch_miniapp","url":"https://hyper-rewards.vercel.app?fid=${fid}","name":"HYPER Genesis Allocation","iconUrl":"https://hyper-rewards.vercel.app/og-image-v2.png","splashImageUrl":"https://hyper-rewards.vercel.app/og-image-v2.png","splashBackgroundColor":"#050510"}}}' />
+<meta name="fc:miniapp" content='{"version":"next",'imageUrl":"https://hyper-rewards.vercel.app/api/og-image?fid=${fid}',"button":{"title":"Check My HYPER","action":{"type":"launch_miniapp","url":"https://hyper-rewards.vercel.app?fid=${fid}","name":"HYPER Genesis Allocation","iconUrl":"https://hyper-rewards.vercel.app/og-image-v2.png","splashImageUrl":"https://hyper-rewards.vercel.app/og-image-v2.png","splashBackgroundColor":"#050510"}}}' />
 <title>${username} — ${tokens} $HYPER</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600;700&display=swap');
