@@ -21,7 +21,7 @@ body{background:var(--dark);color:var(--white);font-family:'Rajdhani',sans-serif
 
 .neon-card{position:relative;background:var(--card);backdrop-filter:blur(16px);border-radius:18px;padding:20px;margin-bottom:14px;overflow:hidden}
 .neon-card::before{content:'';position:absolute;inset:0;border-radius:18px;padding:1.5px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink))}
-.dot-border{position:absolute;inset:0;border-radius:18px;pointer-events:none}
+.dot-border{position:absolute;inset:0;border-radius:18px;pointer-events:none;z-index:0}
 .dot-border span{position:absolute;width:8px;height:8px;border-radius:50%}
 .dot-border span:nth-child(1){background:var(--cyan);box-shadow:0 0 10px var(--cyan),0 0 20px var(--cyan);animation:orbit 3s linear infinite}
 .dot-border span:nth-child(2){background:var(--purple);box-shadow:0 0 10px var(--purple),0 0 20px var(--purple);animation:orbit2 3s linear infinite}
@@ -30,7 +30,7 @@ body{background:var(--dark);color:var(--white);font-family:'Rajdhani',sans-serif
 
 .search-label{font-size:12px;color:#ffffff;font-weight:700;text-transform:uppercase;letter-spacing:2px;margin-bottom:10px}
 .search-row{display:flex;gap:8px}
-.search-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(0,245,255,0.3);border-radius:10px;padding:12px 14px;color:#ffffff;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;outline:none;transition:all 0.3s;-webkit-appearance:none}
+.search-input{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(0,245,255,0.3);border-radius:10px;padding:12px 14px;color:#ffffff;font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;outline:none;transition:all 0.3s;-webkit-appearance:none;position:relative;z-index:10}
 .search-input:focus{border-color:var(--cyan);background:rgba(0,245,255,0.08);box-shadow:0 0 0 3px rgba(0,245,255,0.12)}
 .search-input::placeholder{color:rgba(255,255,255,0.45);font-weight:400}
 
@@ -259,12 +259,12 @@ const TOP10=[
   {fid:3,tokens:2418951.55},
   {fid:5650,tokens:2303414.44},
   {fid:239,tokens:1150972.89},
-  {fid:680,tokens:987432.11},
-  {fid:616,tokens:876543.22},
-  {fid:1,tokens:765432.10},
-  {fid:3621,tokens:654321.05},
-  {fid:576,tokens:543210.88},
-  {fid:5,tokens:432109.77},
+  {fid:12,tokens:1055910.70},
+  {fid:2,tokens:1026079.82},
+  {fid:3621,tokens:919906.59},
+  {fid:8,tokens:914845.32},
+  {fid:1483478,tokens:895832.77},
+  {fid:206,tokens:882369.15},
 ];
 const KEY='4D13DD4C-550D-45A6-B887-F83ABA4FF755';
 const rewardsMap={};
