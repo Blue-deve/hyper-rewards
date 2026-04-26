@@ -339,13 +339,13 @@ function shareResult(){
   const name=document.getElementById('userName').textContent||'';
   const amt=document.getElementById('allocNum').textContent||'0';
   const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
-  if(window.Farcaster?.actions) window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
+  if(window.farcasterSdk?.actions) window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
   else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
 function shareCountdown(){
   const amt=document.getElementById('allocNum').textContent||'0';
   const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
-  if(window.Farcaster?.actions) window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
+  if(window.farcasterSdk?.actions) window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
   else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
 function moreInfo(){window.open('https://github.com/farcasterorg/protocol/discussions/19','_blank')}
@@ -385,6 +385,20 @@ async function loadHolders(){
   document.getElementById('carouselTrack').innerHTML=items+items;
 }
 loadHolders();
+</script>
+<script type="module">
+  import { sdk } from 'https://esm.sh/@farcaster/frame-sdk';
+  // Make sdk available globally for other functions
+  window.farcasterSdk = sdk;
+  // Call ready after page loads
+  window.addEventListener('load', async () => {
+    try {
+      await sdk.actions.ready();
+      console.log('Mini app ready!');
+    } catch(e) {
+      console.log('Not in mini app context');
+    }
+  });
 </script>
 </body>
 </html>
