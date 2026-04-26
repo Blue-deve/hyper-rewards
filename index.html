@@ -339,13 +339,13 @@ function shareResult(){
   const name=document.getElementById('userName').textContent||'';
   const amt=document.getElementById('allocNum').textContent||'0';
   const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
-  if(window.farcasterSdk?.actions) window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
+  if(window.farcasterSdk?.actions) window.farcasterSdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
   else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
 function shareCountdown(){
   const amt=document.getElementById('allocNum').textContent||'0';
   const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
-  if(window.farcasterSdk?.actions) window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
+  if(window.farcasterSdk?.actions) window.farcasterSdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
   else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
 function moreInfo(){window.open('https://github.com/farcasterorg/protocol/discussions/19','_blank')}
