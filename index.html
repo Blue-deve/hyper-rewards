@@ -27,7 +27,7 @@ body{background:var(--dark);color:var(--white);font-family:'Rajdhani',sans-serif
 .title .cg{background:linear-gradient(135deg,var(--cyan),var(--purple));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .subtitle{font-size:13px;color:#ffffff;font-weight:600;letter-spacing:0.3px}
 
-.neon-card{position:relative;background:var(--card);backdrop-filter:blur(16px);border-radius:18px;padding:20px;margin-bottom:14px;overflow:hidden}
+.neon-card{position:relative;isolation:isolate;background:var(--card);backdrop-filter:blur(16px);border-radius:18px;padding:20px;margin-bottom:14px;overflow:hidden}
 .neon-card::before{content:'';position:absolute;inset:0;border-radius:18px;padding:1.5px;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;background:linear-gradient(135deg,var(--cyan),var(--purple),var(--pink))}
 .dot-border{position:absolute;inset:0;border-radius:18px;pointer-events:none;z-index:0}
 .dot-border span{position:absolute;width:8px;height:8px;border-radius:50%}
@@ -66,7 +66,7 @@ body{background:var(--dark);color:var(--white);font-family:'Rajdhani',sans-serif
 .alloc-sub{font-size:11px;color:#9ca3af;margin-top:5px}
 
 .action-row{display:flex;gap:8px}
-.btn-act{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;border-radius:10px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:1px;border:1.5px solid;transition:all 0.25s;-webkit-tap-highlight-color:transparent;background:transparent}
+.btn-act{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:11px 10px;border-radius:10px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:1px;border:1.5px solid;transition:all 0.25s;-webkit-tap-highlight-color:transparent;background:transparent;position:relative;z-index:10}
 .btn-share{border-color:var(--purple);color:var(--purple)}
 .btn-share:hover,.btn-share:active{background:rgba(168,85,247,0.2);box-shadow:0 0 16px rgba(168,85,247,0.4)}
 .btn-info{border-color:rgba(0,245,255,0.5);color:var(--cyan)}
@@ -191,8 +191,8 @@ html{scrollbar-width:thin;scrollbar-color:#f72585 #04061a}
       <div class="neon-card" style="margin-bottom:14px;">
         <div class="dot-border"><span></span><span></span></div>
         <div style="display:flex;gap:10px;">
-          <button onclick="shareCountdown()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 10px;border-radius:12px;font-family:'Orbitron',monospace;font-size:10px;font-weight:800;cursor:pointer;letter-spacing:1px;border:none;background:linear-gradient(135deg,#00f5ff,#ff2d9b);color:#000;-webkit-tap-highlight-color:transparent;">🚀 Share</button>
-          <button onclick="moreInfo()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 10px;border-radius:12px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:1px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#fff;-webkit-tap-highlight-color:transparent;">⚡ More Info</button>
+          <button onclick="shareCountdown()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 10px;border-radius:12px;font-family:'Orbitron',monospace;font-size:10px;font-weight:800;cursor:pointer;letter-spacing:1px;border:none;background:linear-gradient(135deg,#00f5ff,#ff2d9b);color:#000;-webkit-tap-highlight-color:transparent;position:relative;z-index:10;">🚀 Share</button>
+          <button onclick="moreInfo()" style="flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:13px 10px;border-radius:12px;font-family:'Orbitron',monospace;font-size:10px;font-weight:700;cursor:pointer;letter-spacing:1px;border:1px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.07);color:#fff;-webkit-tap-highlight-color:transparent;position:relative;z-index:10;">⚡ More Info</button>
         </div>
       </div>
 
