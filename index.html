@@ -214,6 +214,8 @@ html{scrollbar-width:thin;scrollbar-color:#f72585 #04061a}
 </div>
 
 <script>
+// Call ready immediately
+(async()=>{try{if(window?.Farcaster?.actions?.ready)await window.Farcaster.actions.ready();}catch(e){}})();
 // ── BACKGROUND ───────────────────────────────────────────────
 const C=document.getElementById('bg');
 const cx=C.getContext('2d');
