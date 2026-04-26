@@ -2,6 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
+<meta property="og:title" content="$HYPER Genesis Allocation" />
+<meta property="og:description" content="Check your $HYPER token allocation from FIP-19/Hypersnap retro rewards. Built by @3hundred." />
+<meta property="og:image" content="https://hyper-rewards.vercel.app/og.png" />
+<meta property="og:url" content="https://hyper-rewards.vercel.app" />
+<meta property="fc:frame" content="vNext" />
+<meta property="fc:frame:image" content="https://hyper-rewards.vercel.app/og.png" />
+<meta property="fc:frame:button:1" content="Check My Allocation" />
+<meta property="fc:frame:post_url" content="https://hyper-rewards.vercel.app" />
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
@@ -333,10 +341,10 @@ function shareResult(){
   else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
 function shareCountdown(){
-  const d=document.getElementById('cdDays').textContent;
-  const h=document.getElementById('cdHours').textContent;
-  const text=`⏳ ${d} days ${h} hrs until Farcon Rome!\n\n$HYPER token launch is coming 🚀\nhyper-rewards.vercel.app`;
-  window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
+  const amt=document.getElementById('allocNum').textContent||'0';
+  const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
+  if(window.Farcaster?.actions) window.Farcaster.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
+  else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
 function moreInfo(){window.open('https://github.com/farcasterorg/protocol/discussions/19','_blank')}
 
