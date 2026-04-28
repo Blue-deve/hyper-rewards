@@ -338,13 +338,13 @@ document.getElementById('searchInput').addEventListener('keydown',function(e){if
 function shareResult(){
   const name=document.getElementById('userName').textContent||'';
   const amt=document.getElementById('allocNum').textContent||'0';
-  const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app/api/og?fid=${window._userFID||""}\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
+  const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
   if(window.farcasterSdk?.actions) window.farcasterSdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
   else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
 function shareCountdown(){
   const amt=document.getElementById('allocNum').textContent||'0';
-  const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app/api/og?fid=${window._userFID||""}\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
+  const text=`🔥 I got ${amt} $HYPER in the Genesis allocation!\nCheck yours 👇 https://hyper-rewards.vercel.app\nBuilt by @3hundred · Based on FIP-19/Hypersnap by @cassie\n#Farcaster #HYPER #Genesis`;
   if(window.farcasterSdk?.actions) window.farcasterSdk.actions.openUrl(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`);
   else window.open(`https://warpcast.com/~/compose?text=${encodeURIComponent(text)}`,'_blank');
 }
